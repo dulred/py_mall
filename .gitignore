@@ -1,0 +1,13 @@
+# Python虚拟环境
+venv/
+env/
+.env/
+.venv/
+# Python缓存和编译文件
+__pycache__/
+*.pyc
+*.pyo
+
+# 虚拟环境创建脚本
+env.bat
+env.sh
