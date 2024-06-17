@@ -1,17 +1,32 @@
 from flask import Flask
 from config import DevelopmentConfig
+from app.model import *
 
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # 在这里注册蓝图(Blueprint)
-    from app.views.main import bp as main_bp
-    from app.views.auth import bp as auth_bp
-    app.register_blueprint(main_bp)
-    app.register_blueprint(auth_bp, url_prefix='/auth') 
+    with app.app_context():
+        db.init_app(app)
+        db.create_all()
 
+    # 在这里注册蓝图(Blueprint)
+    from app.views.auth import bp as auth_bp
+    from app.views.goods import bp as goods_bp
+    from app.views.goodsType import bp as goodsType_bp
+    from app.views.address import bp as address_bp
+    from app.views.vip import bp as vip_bp
+    app.register_blueprint(auth_bp) 
+    app.register_blueprint(goods_bp)
+    app.register_blueprint(goodsType_bp) 
+    app.register_blueprint(address_bp) 
+    app.register_blueprint(vip_bp) 
     return app
+
+from flask import Flask, current_app
+
+app = Flask(__name__)
+
 
 
 """ 

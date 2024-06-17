@@ -1,8 +1,8 @@
 from flask import Blueprint
 
-bp = Blueprint('main', __name__)
+bp = Blueprint('vip', __name__)
 
-from app.views.main import routes
+from app.views.vip import bp
 
 
 """ 

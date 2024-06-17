@@ -3,10 +3,10 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'app.db')
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = "123.com"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{ipaddress}:{port}/{database}".format(username="root",password="123456",ipaddress="192.168.1.26",port="3306",database="mall")
+    SQLALCHEMY_TRACK_MODIFICATIONS = True#动态追踪修改设置
+    SQLALCHEMY_ECHO = True 
 
 class DevelopmentConfig(Config):
     DEBUG = True
@@ -14,6 +14,7 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
 
+WHITE_NAME_LIST = ["/api/login","/api/regist","/api/goods/type","/api/by/tag/goods"]
 
 """ 
 这个配置文件包含以下几个部分:
