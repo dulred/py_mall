@@ -3,7 +3,7 @@ from app.model.goods import *
 from app.model.address import *
 from app.model.goodsType import *
 from app.utils.utils import *
-from app.views.goods import bp
+from app.views.comments import bp
 import os
 #商品添加接口
 @bp.route("/api/goods/add",methods=["POST"])

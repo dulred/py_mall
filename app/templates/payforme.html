@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Me</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #FFDAB9; /* 浅桃色 */
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .thank-you {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #333; /* 深灰色 */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .tea-button {
+            background-color: #FFA07A; /* 柔和橙色 */
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            font-size: 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tea-button i {
+            margin-right: 10px;
+        }
+
+        .tea-button:hover {
+            background-color: #FF7F50; /* 深橙色 */
+            transform: scale(1.1);
+        }
+
+        /* 弹窗样式 */
+        .modal {
+            display: none; /* 初始隐藏 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); /* 黑色背景，有透明度 */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal .modal-content p {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 10px;
+            
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 32px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .qr-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="thank-you">Thank you for your generosity!</div>
+        <button class="tea-button" onclick="openModal()">
+            <i class="fas fa-mug-hot"></i> Buy Me a Cup of Tea
+        </button>
+    </div>
+
+    <!-- 弹窗内容 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>Scan the QR code to support me:</p>
+            <img src="./static/wx_ewm.jpg" alt="WeChat QR Code" class="qr-image">
+        </div>
+    </div>
+
+    <script>
+        // 打开弹窗
+        function openModal() {
+            document.getElementById("myModal").style.display = "block";
+        }
+
+        // 关闭弹窗
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        // 点击弹窗外区域关闭弹窗
+        window.onclick = function(event) {
+            var modal = document.getElementById("myModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

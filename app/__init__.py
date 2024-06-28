@@ -1,6 +1,8 @@
-from flask import Flask
-from config import DevelopmentConfig
+from flask import Flask,request,session
+from config import *
 from app.model import *
+import simplejson as json
+from app.utils.utils import *
 
 def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
@@ -16,18 +18,43 @@ def create_app(config_class=DevelopmentConfig):
     from app.views.goodsType import bp as goodsType_bp
     from app.views.address import bp as address_bp
     from app.views.vip import bp as vip_bp
+    from app.views.orders import bp as orders_bp
+    from app.views.comments import bp as comments_bp
+    from app.views.court import bp as court_bp
+    from app.views.payforme import bp as payforme_bp
     app.register_blueprint(auth_bp) 
     app.register_blueprint(goods_bp)
     app.register_blueprint(goodsType_bp) 
     app.register_blueprint(address_bp) 
     app.register_blueprint(vip_bp) 
+    app.register_blueprint(orders_bp) 
+    app.register_blueprint(comments_bp) 
+    app.register_blueprint(court_bp) 
+    app.register_blueprint(payforme_bp) 
+
+    @app.before_request
+    def before():
+        try:
+            data = json.loads(request.get_data(as_text=True))
+            request.form = data
+        except:
+            pass
+        url = request.path #当前请求的URL
+        passUrl = WHITE_NAME_LIST
+        if url in passUrl:
+            pass 
+        elif "static" in url:
+            pass
+        elif "/api/goods/detail/" in url:
+            pass 
+        else:
+            _id = session.get("_id",None)
+            if not _id:
+                return result(203,{"info":"未登录"})
+            else:
+                pass 
+		
     return app
-
-from flask import Flask, current_app
-
-app = Flask(__name__)
-
-
 
 """ 
 这是一个简化版的 `app/__init__.py` 文件,只包含 `create_app` 函数:

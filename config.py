@@ -14,7 +14,7 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
 
-WHITE_NAME_LIST = ["/api/login","/api/regist","/api/goods/type","/api/by/tag/goods"]
+WHITE_NAME_LIST = ["/api/login","/api/regist","/api/goods/type","/api/by/tag/goods","/payforme"]
 
 """ 
 这个配置文件包含以下几个部分:
