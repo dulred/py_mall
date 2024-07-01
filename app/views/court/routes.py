@@ -1,10 +1,10 @@
-from flask import request
+from flask import request,session
 from app.model.goods import *
 from app.model.address import *
 from app.model.goodsType import *
+from app.model.court import *
 from app.utils.utils import *
-from app.views.comments import bp
-import os
+from app.views.court import bp
 
 #获取自己购物车和商品信息
 @bp.route("/api/self/court")

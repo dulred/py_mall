@@ -1,16 +1,8 @@
-'''
-Author: yzs dulred@qq.com
-Date: 2024-06-27 13:40:08
-LastEditors: yzs dulred@qq.com
-LastEditTime: 2024-07-01 10:41:59
-FilePath: \py_mall\app\views\court\__init__.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
-'''
 from flask import Blueprint
 
-bp = Blueprint('court', __name__)
+bp = Blueprint('user', __name__)
 
-from app.views.court import routes
+from app.views.user import routes
 
 
 """ 

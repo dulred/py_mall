@@ -5,6 +5,7 @@ from app.model import db
 from app.model.admin import Admin
 from app.model.user import User
 from app.model.court import Court
+
 #登录接口。普通用户和管理员分开 
 @bp.route("/api/login",methods=["POST","GET"])
 def login():
@@ -65,35 +66,3 @@ def regist():
 			return result(502,{"info":"数据有误"})
 		
 
-#添加管理员
-@bp.route("/api/admin/add",methods=["POST"])
-def admin_add():
-	if request.method == "POST":
-
-		form = request.form
-		data = {
-			"name":form["name"],
-			"account":form["account"],
-			"password":md5(form["password"]),
-			"createTime":getNowDataTime(),
-			"level":form["level"]
-		}
-		admin = Admin(**data)
-		db.session.add(admin)
-		db.session.commit()
-		return result(200)
-	
-#退出系统
-@bp.route("/api/quit",methods=["POST"])
-def quit():
-	if request.method == "POST":
-		_id = session["_id"]
-		_type = request.form["type"]
-		if _type == "admin":
-			admin = Admin.query.get(_id)
-			admin.logoutTime = getNowDataTime()
-		else:
-			user = User.query.get(_id)
-			user.logoutTime = getNowDataTime()
-		del session["_id"]
-		return result(200)

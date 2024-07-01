@@ -1,3 +1,11 @@
+'''
+Author: yzs dulred@qq.com
+Date: 2024-06-12 15:30:54
+LastEditors: yzs dulred@qq.com
+LastEditTime: 2024-07-01 10:52:39
+FilePath: \py_mall\app\__init__.py
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+'''
 from flask import Flask,request,session
 from config import *
 from app.model import *
@@ -22,6 +30,7 @@ def create_app(config_class=DevelopmentConfig):
     from app.views.comments import bp as comments_bp
     from app.views.court import bp as court_bp
     from app.views.payforme import bp as payforme_bp
+    from app.views.user import bp as user_bp
     app.register_blueprint(auth_bp) 
     app.register_blueprint(goods_bp)
     app.register_blueprint(goodsType_bp) 
@@ -31,14 +40,10 @@ def create_app(config_class=DevelopmentConfig):
     app.register_blueprint(comments_bp) 
     app.register_blueprint(court_bp) 
     app.register_blueprint(payforme_bp) 
+    app.register_blueprint(user_bp) 
 
     @app.before_request
     def before():
-        try:
-            data = json.loads(request.get_data(as_text=True))
-            request.form = data
-        except:
-            pass
         url = request.path #当前请求的URL
         passUrl = WHITE_NAME_LIST
         if url in passUrl:

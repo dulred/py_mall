@@ -134,6 +134,7 @@
         // 点击弹窗外区域关闭弹窗
         window.onclick = function(event) {
             var modal = document.getElementById("myModal");
+            console.log(event.target)
             if (event.target === modal) {
                 modal.style.display = "none";
             }
