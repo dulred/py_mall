@@ -1,4 +1,23 @@
+<!-- 启动本项目 --> （使用python 3.10.6）
+python -m venv venv
 
+venv\Scripts\activate
+
+python -m pip install -r requirements.txt
+
+<!-- 
+还要配置和安装好mysql数据库
+然后看config.py 这个配置文件里面根据自己修改用户名和密码，还需要创建一个mall 的 数据库
+ -->
+python run.py
+
+修改完要使用 freeze 导入修改的依赖(如果有的话)
+python -m pip freeze > requirements.txt
+
+然后提交git
+
+
+<!-- 题外话 python -m pip install cryptography-->
 <!-- 创建和使用虚拟环境 -->
 
 好的,我将为您总结在不同情况下创建、激活和使用Python虚拟环境的命令:
@@ -7,7 +26,7 @@
 
    - 使用Python内置的venv模块:
      ```
-     python -m venv env
+     python -m venv venv
      ```
 
    - 使用virtualenv工具:
@@ -33,12 +52,12 @@
 
    - 安装包:
      ```
-     pip install package_name
+     python -m pip install package_name
      ```
 
    - 运行Python脚本:
      ```
-     python script.py
+     python -m python script.py
      ```
 
 4. **退出虚拟环境**
@@ -52,22 +71,22 @@
 
    - 列出所有已安装包:
      ```
-     pip list
+     python -m pip list
      ```
 
    - 查看某个包信息:
      ```
-     pip show package_name
+     python -m pip show package_name
      ```
 
    - 生成requirements.txt文件:
      ```
-     pip freeze > requirements.txt
+     python -m pip freeze > requirements.txt
      ```
 
    - 根据requirements.txt安装所需包:
      ```
-     pip install -r requirements.txt
+     python -m pip install -r requirements.txt
      ```
 
 一些最佳实践:

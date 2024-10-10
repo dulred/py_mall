@@ -1,9 +1,7 @@
 from flask import Blueprint
 
-bp = Blueprint('orders', __name__)
-
-from app.views.orders import routes
-
+bp = Blueprint('thumb', __name__)
+from app.views.thumb import routes
 
 """ 
 在 Flask 应用中，最后一行 from app.main import routes 是必要的，即使它看起来不直接使用。以下是为什么这行代码至关重要的详细解释。

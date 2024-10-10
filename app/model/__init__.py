@@ -13,14 +13,29 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-from .user import User
-from .ad import Ad
-from .address import Address
-from .admin import Admin
-from .court import Court
+from .users import User
+from .tags import Tag
+from .addresses import Address
+from .suppliers import Supplier
+from .logistic import Logistic
+from .delivery import Delivery
+from .reviews import Review
+from .returns import Return
+from .orders import Order
+from .orderItems import OrderItem
+from .goodsTags import GoodsTag
+from .categories import Category
+from .cartItems import CartItem
+from .cart import Cart
+from .brands import Brand
+from .addresses import Address
 from .goods import Goods
-from .goodsType import GoodsType
-from .receipt import *
-from .vip import Vip
-from .comment import Comment
+from .sw import SW
+from .carousel import Carousel
+from .detail_img import Deatil_img
+from .thumb_img import Thumb_img
+from .goodsStyle import GoodsStyle
+from .sku import Sku
+from .specs import Specs
+from .goods_config import Goods_config
 # 其他模型导入

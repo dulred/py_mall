@@ -1,5 +1,11 @@
-import time
+def main():
+    path = "14,2,3,4"
+    fruits = path.split(',')  # 按逗号分割
 
-orderNum = str(time.time()).replace('.','')
-print(time.time())
-print(orderNum)
+    for i in range(0, len(fruits)):
+        print(fruits[i])
+    
+    print(type(fruits))
+
+if __name__ == "__main__":
+    main()
