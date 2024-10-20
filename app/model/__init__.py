@@ -38,4 +38,5 @@ from .goodsStyle import GoodsStyle
 from .sku import Sku
 from .specs import Specs
 from .goods_config import Goods_config
+from .admin_user import AdminUser
 # 其他模型导入

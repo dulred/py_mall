@@ -1,7 +1,8 @@
 import hashlib
+import math
 import random
 import time 
-from datetime import datetime,timedelta
+from datetime import date, datetime,timedelta
 import uuid
 from flask import jsonify
 import shutil
@@ -13,6 +14,25 @@ def result(code=200,msg='处理成功!',d={}):
     data['msg'] = msg
     data['result'] = d
     response = jsonify({'code':code,'msg': msg,'result':d})
+    response.status_code = code
+    return response
+
+def pageResult(code=200,msg='查询成功',d={},page=1,pageSize=10,total_count=1):
+    page_count = math.ceil(total_count / pageSize)
+    if page < 1:
+         page = 1
+    elif page > page_count:
+         page = page_count
+    data = {
+        'code': code,
+        'msg': msg,
+        'page': page,
+        'pageSize': pageSize,
+        'totalCount': total_count,
+        'pageCount': page_count,
+        'result': d
+     }
+    response = jsonify(data)
     response.status_code = code
     return response
 
@@ -124,22 +144,37 @@ def get_full_location(province_code, city_code, county_code):
 
 
 
-def gmt_to_Shanghai(str_dataTime):
-
-    if not str_dataTime:
-         return ''
+def gmt_to_Shanghai(input_time):
+    if not input_time:
+        return ''
 
     # 创建上海时区对象
     shanghai_tz = pytz.timezone("Asia/Shanghai")
 
-    # 将 GMT 时间转换为上海时间
-    gmt_time = pytz.utc.localize(str_dataTime)  # 转换为带时区的 UTC 时间
-    shanghai_time = gmt_time.astimezone(shanghai_tz)
+    # 如果传入的是 date 类型，将其转换为 datetime 类型，不带时分秒
+    if isinstance(input_time, date) and not isinstance(input_time, datetime):
+        # 转换为 datetime，时间部分设为 00:00:00
+        input_time = datetime(input_time.year, input_time.month, input_time.day)
 
-    # 格式化为指定的字符串格式
-    formatted_time = shanghai_time.strftime("%Y-%m-%d %H:%M:%S")
-    return formatted_time
+        # 直接返回日期部分，因为不需要时分秒
+        return input_time.strftime("%Y-%m-%d")
 
+    # 如果传入的是 datetime 类型，执行时区转换
+    if isinstance(input_time, datetime):
+        # 如果没有时区信息，假定为 GMT/UTC 时间
+        if input_time.tzinfo is None:
+            gmt_time = pytz.utc.localize(input_time)
+        else:
+            gmt_time = input_time
+
+        # 将 GMT 时间转换为上海时间
+        shanghai_time = gmt_time.astimezone(shanghai_tz)
+
+        # 格式化为带时分秒的字符串格式
+        return shanghai_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    # 如果传入的既不是 date 也不是 datetime，返回空字符串
+    return ''
 
 
 

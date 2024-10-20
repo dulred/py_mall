@@ -8,6 +8,7 @@ Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查�
 '''
 import math
 from flask import g, request
+from app.model.admin_user import AdminUser
 from app.model.goods import *
 from app.model.addresses import *
 from app.model.goodsTags import *
@@ -23,7 +24,7 @@ def login():
 		username = request.get_json().get("username")
 		password = request.get_json().get("password")
 		password = md5(password)
-		user = User.query.filter_by(username=username).first()
+		user = AdminUser.query.filter_by(username=username,isActive = 1,isDeleted=0).first()
 		token = create_token(user.id)
 		if user:
 			if user.password==password:
@@ -34,26 +35,27 @@ def login():
 				return result(202,'login error!',{"info":"密码不正确",})
 		else:
 			return result(201,'login error!',{"info":"无该用户信息"})
-#创建用户
-@bp.route("/api/ntk/users", methods=["POST"])
-def create_user():
-	if request.method=="POST":
-		try:
-			username = request.form["username"]
-			password = request.form["password"]
-			password = md5(password)
-			user = User(username=username,password=password)
-			try:
-				db.session.add(user)
-				db.session.commit()
-			except:
-				return result(205,{"info":"重复注册"})
-			user = User.query.filter_by(username=username).first()
-			db.session.commit()
-			session["id"] = user.id 
-			return result(200,'create user success!')
-		except:
-			return result(502,{"info":"数据有误"})
+
+
+#管理员注册接口 (内部人员使用)
+""" {
+    "username": "admin",
+    "password": "123456",
+    "roleId":1 (默认是管理员，模块级别以及接口级别的权限控制)
+} """
+@bp.route("/api/admin",methods=["POST"])
+def admin_register():
+	if request.method == "POST":
+		json_data = request.get_json()
+		username = json_data.get("username")
+		_password = json_data.get("password")
+		_roleId = json_data.get("roleId")
+		password = md5(_password)
+		db.session.add(AdminUser(avatar=f"{DOMAIN}/uploads/avatar/2024083017245_f4ff8519_goods.png",gender="男",birthday="1990-01-01",provinceCode=110000
+						,cityCode=110000,countyCode=110101,loginTime = getNowDataTime(),username=username,password=password,roleId = _roleId,mobile=123456789))
+		db.session.commit()
+		return result(200,'register success!')
+	return result(400,"please use POST method")
 
 
 # 小程序模拟手机号登录
@@ -76,7 +78,7 @@ def simple_login():
 				return result(200,'pre user success!',user_dict)
 			else:
 				db.session.add(User(mobile=phoneNumber,avatar=f"{DOMAIN}/uploads/avatar/2024083017245_f4ff8519_goods.png",gender="男",birthday="1990-01-01",profession="保密",provinceCode=110000
-						,cityCode=110000,countyCode=110101))
+						,cityCode=110000,countyCode=110101,loginTime = getNowDataTime()))
 				db.session.commit()
 				re_user = db.session.query(User).filter_by(mobile=phoneNumber).first()
 				user_id = re_user.id
@@ -111,6 +113,32 @@ def self_info():
 		return result(200,'select user',user_dict)
 	except Exception as e:
 		return result(400,str(e))
+
+
+
+#修改用户状态
+@bp.route("/api/user",methods=["PUT"])
+def update_user_status():
+	if request.method == "PUT":
+		try:
+			json_data = request.get_json()
+			user = db.session.query(User).filter_by(id=json_data.get("id")).first()
+			if json_data.get('type') == 0:
+				user.isActive = json_data.get('value')
+
+			if json_data.get('type') == 1:
+				user.isDeleted = json_data.get('value')
+
+			try:
+				db.session.commit()
+			except Exception as e:
+				return result(400,str(e))
+			
+			return result(200,"update user success")
+		except Exception as e:
+			return result(400,str(e))
+	return result(400,"please use PUT method")
+
 
 
 # 修改个人信息
@@ -160,7 +188,39 @@ def users_all():
 			offset = (page - 1) * pageSize
 			total_count = db.session.query(User).filter_by(isDeleted = 0).count()
 			users_list =  db.session.query(User).filter_by(isDeleted = 0).offset(offset).limit(pageSize).all()
-			item_list = [{'id':item.id,'nickname':item.nickname,'roleId':item.roleId,'mobile':item.mobile,'avatar': item.avatar,'gender':item.gender,'birthday':item.birthday,"profession":item.profession,"provinceCode":item.provinceCode,"cityCode":item.cityCode,"countyCode":item.countyCode,"remark":item.remark,"balance":item.balance,"loginTime":item.loginTime,"logoutTime":item.logoutTime,"isActive":item.isActive,"isDeleted":item.isDeleted} for item in users_list]
+			print(type(users_list[0].birthday))
+			print(type(users_list[0].loginTime))
+			item_list = [{'id':item.id,'nickname':item.nickname,'mobile':item.mobile,'avatar': item.avatar,'gender':item.gender,'birthday':gmt_to_Shanghai(item.birthday),"profession":item.profession,"provinceCode":item.provinceCode,"cityCode":item.cityCode,"countyCode":item.countyCode,"remark":item.remark,"balance":item.balance,"loginTime":gmt_to_Shanghai(item.loginTime),"logoutTime":gmt_to_Shanghai(item.logoutTime),"isActive":item.isActive,"isDeleted":item.isDeleted} for item in users_list]
+			list_result = {
+				"total": total_count,
+				"pages": math.ceil(total_count / pageSize),
+				"page": page,
+				"pageSize": pageSize,
+				"items": item_list,
+			}
+			return result(200,"查询成功",list_result)
+		except Exception as e:
+			return result(400,str(e))
+	return result(400,"please use POST method")
+
+
+
+
+#分页获取所有管理员信息
+@bp.route("/api/admin/all",methods=["POST"])
+def admin_all():
+	if request.method == "POST":
+		try:
+			data = request.get_json()
+			page = data.get('page')
+			pageSize = data.get('pageSize')
+			# 计算偏移量
+			offset = (page - 1) * pageSize
+			total_count = db.session.query(AdminUser).filter_by(isDeleted = 0).count()
+			users_list =  db.session.query(AdminUser).filter_by(isDeleted = 0).offset(offset).limit(pageSize).all()
+			print(type(users_list[0].birthday))
+			print(type(users_list[0].loginTime))
+			item_list = [{'id':item.id,"roleId":item.roleId,'nickname':item.nickname,'mobile':item.mobile,'avatar': item.avatar,'gender':item.gender,'birthday':gmt_to_Shanghai(item.birthday),"provinceCode":item.provinceCode,"cityCode":item.cityCode,"countyCode":item.countyCode,"remark":item.remark,"loginTime":gmt_to_Shanghai(item.loginTime),"logoutTime":gmt_to_Shanghai(item.logoutTime),"isActive":item.isActive,"isDeleted":item.isDeleted} for item in users_list]
 			list_result = {
 				"total": total_count,
 				"pages": math.ceil(total_count / pageSize),

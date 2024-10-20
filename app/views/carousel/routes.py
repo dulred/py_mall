@@ -131,7 +131,7 @@ def carousel_update():
 				try: 
 					db.session.commit()
 				except Exception as e:  
-					return result(200,str(e))
+					return result(200,str(e))	
 				
 				return result(200,'File uploaded successfully',{'http_url': f"{GOODS_CAROUSEL_HTTP_URL}{filename}"})
 			else:

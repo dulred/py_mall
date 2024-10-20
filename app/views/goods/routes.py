@@ -156,32 +156,6 @@ def goods_delete(id):
 	if request.method == "DELETE":
 		try:
 			goods = db.session.query(Goods).filter_by(id=id,isDeleted = 0).first()
-
-			# 查看goods_style 是否有绑定
-			goods_style_count = db.session.query(GoodsStyle).filter_by(goods_id = id).count()
-			if goods_style_count > 0:
-				return result(400,"该商品存在与goods_style表中，无法删除")
-
-			# 查看sku是否有绑定
-			sku_count = db.session.query(Sku).filter_by(goodsId = id).count()
-			if sku_count > 0:
-				return result(400,"该商品存在与sku表中,无法删除")
-
-			# 查看spec规格是否有绑定
-			spec_count = db.session.query(Specs).filter_by(goodsId = id).count()
-			if spec_count > 0:
-				return result(400,"该商品存在与spec表中,无法删除")
-
-			# 查看detail图中有无绑定
-			detail_count = db.session.query(Sku).filter_by(goodsId = id).count()
-			if detail_count > 0:
-				return result(400,"该商品存在与detail表中,无法删除")
-
-			# 查看thumb图中有无绑定
-			thumb_count = db.session.query(Thumb_img).filter_by(goodsId = id).count()
-			if thumb_count > 0:
-				return result(400,"该商品存在与thumb表中,无法删除")
-
 			goods.isDeleted = True
 			db.session.commit()
 			
@@ -473,63 +447,4 @@ def goods_search():
 				"likeTimes":good.likeTimes,
 				"buyTimes":good.buyTimes,
 				})
-		return result(200,data)
-#热销的商品推荐 buyTimes 推荐
-@bp.route("/api/goods/recommend/buytimes")
-def goods_recommend_buytime():
-	if request.method=="GET":
-		goods = Goods.query.order_by(db.desc(Goods.buyTimes)).limit(50)
-		data = dict()
-		data["data"] = []
-		for good in goods:
-			data["data"].append({
-				"id":good._id,
-				"name":good.name,
-				"originPrice":good.originPrice,
-				"sellPrice":good.sellPrice,
-				"image":good.image,
-				"lookTimes":good.lookTimes,
-				"likeTimes":good.likeTimes,
-				"buyTimes":good.buyTimes,
-				})
-		return result(200,data)
-#添加购物车多的商品 likeTimes 推荐
-@bp.route("/api/goods/recommend/liketimes")
-def goods_recommend_liketimes():
-	if request.method=="GET":
-		goods = Goods.query.order_by(db.desc(Goods.likeTimes)).limit(50)
-		data = dict()
-		data["data"] = []
-		for good in goods:
-			data["data"].append({
-				"id":good._id,
-				"name":good.name,
-				"originPrice":good.originPrice,
-				"sellPrice":good.sellPrice,
-				"image":good.image,
-				"lookTimes":good.lookTimes,
-				"likeTimes":good.likeTimes,
-				"buyTimes":good.buyTimes,
-				})
-		return result(200,data)
-	
-#获取商品的详细信息 更新 lookTimes 浏览次数
-@bp.route("/api/goods/detail/<int:goodsId>")
-def goods_detail(goodsId):
-	if request.method=="GET":
-		goods = Goods.query.get(goodsId)
-		goods.lookTimes = goods.lookTimes + 1
-		db.session.commit()
-		goods = Goods.query.get(goodsId)
-		data= goods.__dict__
-		del data["_sa_instance_state"]
-		data['produceTime']=data['produceTime'].strftime("%Y-%m-%d")
-		data['expireTime']=data['expireTime'].strftime("%Y-%m-%d")
-		data['createTime']=data['createTime'].strftime("%Y-%m-%d")
-		data["goodsType_id"] = GoodsType.query.get(data["goodsType_id"]).name 
-		createAddress = Address.query.get(data["createAddress_id"])
-		data["createAddress_id"] = createAddress.province+createAddress.town + createAddress.county+createAddress.detail
-		sendAddress = Address.query.get(data["sendAddress_id"])
-		data["sendAddress_id"] = sendAddress.province+sendAddress.town + sendAddress.county+createAddress.detail
-			
 		return result(200,data)

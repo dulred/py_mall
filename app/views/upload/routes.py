@@ -46,7 +46,7 @@ def goods_thumb_tmp_pages():
         filename = generate_filename(file.filename)
         file_path = os.path.join(GOODS_THUMB_TMP_FOLDER_URL,filename)
         file.save(file_path)
-        return result(200,'File uploaded successfully',{'file_url': f"{GOODS_THUMB_TMP_HTTP_URL}{filename}"})
+        return result(200,'File uploaded successfully',{'http_url': f"{GOODS_THUMB_TMP_HTTP_URL}{filename}"})
     else:
         return result(400,'Invalid file type. Allowed types: png, jpg, jpeg, gif')
     
@@ -67,7 +67,7 @@ def goods_detail_tmp_pages():
         filename = generate_filename(file.filename)
         file_path = os.path.join(GOODS_DETAIL_TMP_FOLDER_URL,filename)
         file.save(file_path)
-        return result(200,'File uploaded successfully',{'file_url': f"{GOODS_DETAIL_TMP_HTTP_URL}{filename}"})
+        return result(200,'File uploaded successfully',{'http_url': f"{GOODS_DETAIL_TMP_HTTP_URL}{filename}"})
     else:
         return result(400,'Invalid file type. Allowed types: png, jpg, jpeg, gif')
 
@@ -88,7 +88,7 @@ def goods_sku_tmp_pages():
         filename = generate_filename(file.filename)
         file_path = os.path.join(GOODS_SKU_TMP_FOLDER_URL,filename)
         file.save(file_path)
-        return result(200,'File uploaded successfully',{'file_url': f"{GOODS_SKU_TMP_HTTP_URL}{filename}"})
+        return result(200,'File uploaded successfully',{'http_url': f"{GOODS_SKU_TMP_HTTP_URL}{filename}"})
     else:
         return result(400,'Invalid file type. Allowed types: png, jpg, jpeg, gif')
 

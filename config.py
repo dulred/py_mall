@@ -35,7 +35,7 @@ class ProductionConfig(Config):
     DEBUG = False
 
 # 白名单
-WHITE_NAME_LIST = ["/api/login","/api/login/wxMin/simple"]
+WHITE_NAME_LIST = ["/api/login","/api/login/wxMin/simple","/api/admin"]
 
 # 字体图文件
 FONT_FOLDER_URL = "D:\\dulred\\dev\\uploads\\font"
